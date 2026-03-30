@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniSalute — KPIs Media & Costs Dashboard 2025</title>
+<style>
+:root {
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f5f4f0;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #73726c;
+  --color-text-tertiary: #9c9a92;
+  --color-text-success: #3B6D11;
+  --color-text-danger: #A32D2D;
+  --color-border-tertiary: rgba(0,0,0,0.12);
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background-primary: #1a1a1a;
+    --color-background-secondary: #2c2c2a;
+    --color-text-primary: #e8e6df;
+    --color-text-secondary: #c2c0b6;
+    --color-text-tertiary: #9c9a92;
+    --color-text-success: #97C459;
+    --color-text-danger: #F09595;
+    --color-border-tertiary: rgba(255,255,255,0.12);
+  }
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--color-background-primary); color: var(--color-text-primary); padding: 24px; max-width: 900px; margin: 0 auto; }
+.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 16px; }
+.metric .label { font-size: 12px; color: var(--color-text-secondary); margin: 0; }
+.metric .val { font-size: 20px; font-weight: 500; margin: 4px 0 0; color: var(--color-text-primary); }
+.metric .sub { font-size: 11px; color: var(--color-text-tertiary); margin: 2px 0 0; }
+.grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 8px; }
+.chart-wrap { position: relative; width: 100%; margin-bottom: 20px; }
+.leg { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 6px; font-size: 12px; color: var(--color-text-secondary); }
+.leg span { display: flex; align-items: center; gap: 4px; }
+.dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+h3 { font-size: 16px; font-weight: 500; margin: 20px 0 8px; color: var(--color-text-primary); }
+.section { border-top: 0.5px solid var(--color-border-tertiary); padding-top: 16px; margin-top: 20px; }
+@media (max-width: 600px) {
+  .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<h2 style="font-size:22px;font-weight:500;margin-bottom:20px;">UniSalute — KPIs Media & Costs 2025</h2>
+
+<div class="grid4">
+<div class="metric"><p class="label">Costi operativi totali</p><p class="val">€3.54M</p><p class="sub">CC 52.9% + Media 47.1%</p></div>
+<div class="metric"><p class="label">Traffico sito</p><p class="val">1.65M</p><p class="sub">visite annue</p></div>
+<div class="metric"><p class="label">Lead call center</p><p class="val">236K</p><p class="sub">55.6% inbound</p></div>
+<div class="metric"><p class="label">Preventivi CC</p><p class="val">36.1K</p><p class="sub">CVR lead→prev 15.3%</p></div>
+</div>
+
+<div class="grid4">
+<div class="metric"><p class="label">CAC globale</p><p class="val">€153</p><p class="sub">costi totali / polizze</p></div>
+<div class="metric"><p class="label">CAC media only</p><p class="val">€72</p><p class="sub">solo spesa media</p></div>
+<div class="metric"><p class="label">Costo per lead CC</p><p class="val">€7.92</p><p class="sub">CC cost / leads</p></div>
+<div class="metric"><p class="label">LTV/CAC ratio</p><p class="val" style="color:var(--color-text-success)">21.4x</p><p class="sub">LTV €3,272</p></div>
+</div>
+
+<div class="section"><h3>Full funnel conversion</h3></div>
+<div class="chart-wrap" style="height:200px"><canvas id="funnel"></canvas></div>
+
+<div class="section"><h3>Traffico sito per sorgente</h3></div>
+<div class="leg">
+<span><span class="dot" style="background:#1D9E75"></span>Naturale 78.3%</span>
+<span><span class="dot" style="background:#534AB7"></span>Paid 21.5%</span>
+<span><span class="dot" style="background:#888780"></span>DEM 0.2%</span>
+</div>
+<div class="chart-wrap" style="height:260px"><canvas id="traffic"></canvas></div>
+
+<div class="section"><h3>Mix vendite per sorgente media</h3></div>
+<div class="grid2">
+<div>
+<div class="leg"><span><span class="dot" style="background:#1D9E75"></span>Full digital</span></div>
+<div class="chart-wrap" style="height:200px"><canvas id="mixFD"></canvas></div>
+</div>
+<div>
+<div class="leg"><span><span class="dot" style="background:#534AB7"></span>Lead call center</span></div>
+<div class="chart-wrap" style="height:200px"><canvas id="mixCC"></canvas></div>
+</div>
+</div>
+
+<div class="section"><h3>Costi settimanali: call center vs media</h3></div>
+<div class="leg">
+<span><span class="dot" style="background:#185FA5"></span>Call center</span>
+<span><span class="dot" style="background:#D85A30"></span>Media performance</span>
+</div>
+<div class="chart-wrap" style="height:240px"><canvas id="weeklyCost"></canvas></div>
+
+<div class="section"><h3>Call center: breakdown inbound vs outbound</h3></div>
+<div class="grid3">
+<div class="metric"><p class="label">Inbound totale</p><p class="val">131K</p><p class="sub">UniSalute_INB 78K principale</p></div>
+<div class="metric"><p class="label">Outbound totale</p><p class="val">105K</p><p class="sub">CallMeBack 50K + Social 44K</p></div>
+<div class="metric"><p class="label">Contatti utili</p><p class="val">162K</p><p class="sub">INB 105K + OUT 57K</p></div>
+</div>
+<div class="chart-wrap" style="height:280px"><canvas id="ccBreak"></canvas></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+const grid = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+const txt = isDark ? '#c2c0b6' : '#73726c';
+const base = {responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:txt,font:{size:11}}},y:{grid:{color:grid},ticks:{color:txt,font:{size:11}}}}};
+
+new Chart(document.getElementById('funnel'),{type:'bar',data:{
+labels:['Visite sito','Preventivi FD','Lead CC','Preventivi CC','Vendite FD','Vendite CC'],
+datasets:[{data:[1647026,72250,236027,36121,6528,16595],
+backgroundColor:['#B4B2A9','#1D9E75','#B4B2A9','#534AB7','#1D9E75','#534AB7']}]},
+options:{...base,indexAxis:'y',scales:{...base.scales,x:{...base.scales.x,ticks:{...base.scales.x.ticks,callback:v=>v>=1000?Math.round(v/1000)+'K':v}}}}});
+
+new Chart(document.getElementById('traffic'),{type:'bar',data:{
+labels:['Direct','Organic Search','Pmax Search','Paid Search','Internal','Referring','Campagne Uni','Display','Comparatori','Social Org','Social Paid','Newsletter','Email'],
+datasets:[{data:[522702,487044,92860,211960,79708,72046,63234,24926,15172,8990,8830,1514,3934],
+backgroundColor:['#1D9E75','#1D9E75','#534AB7','#534AB7','#1D9E75','#1D9E75','#1D9E75','#534AB7','#534AB7','#1D9E75','#534AB7','#1D9E75','#888780']}]},
+options:{...base,indexAxis:'y',scales:{...base.scales,x:{...base.scales.x,ticks:{...base.scales.x.ticks,callback:v=>v>=1000?Math.round(v/1000)+'K':v}}}}});
+
+new Chart(document.getElementById('mixFD'),{type:'doughnut',data:{
+labels:['Organic Search','Paid Search','Direct','Internal','Pmax','Comparatori','Other'],
+datasets:[{data:[36.9,22.6,16.7,7.5,5.2,5.0,6.1],backgroundColor:['#1D9E75','#534AB7','#378ADD','#888780','#7F77DD','#D85A30','#B4B2A9']}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+
+new Chart(document.getElementById('mixCC'),{type:'doughnut',data:{
+labels:['Organic Search','Paid Search','Direct','Pmax','Campagne Uni','Other'],
+datasets:[{data:[35.4,19.8,12.8,11.4,8.5,12.1],backgroundColor:['#1D9E75','#534AB7','#378ADD','#7F77DD','#D85A30','#B4B2A9']}]},
+options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+
+const wks = Array.from({length:53},(_,i)=>'W'+(i+1));
+const ccW = [38550,38550,38550,38550,38550,24729,24729,24729,24729,35700,35700,35700,35700,61430,61430,61430,61430,30715,30715,30715,30715,30715,26912,26912,26912,26912,47814,47814,47814,47814,47814,21188,21188,21188,21188,30102,30102,30102,30102,29754,29754,29754,29754,29754,32564,32564,32564,32564,54592,45022,49590,24142,31538];
+const mdW = [25092,30908,44813,34079,26555,32506,50698,44091,44206,41727,39887,28984,22079,22865,23782,26499,26782,22592,29424,28026,34681,26889,11334,27844,25950,17317,19038,23248,21884,22864,21672,16915,7912,8455,19093,46815,59417,55872,47734,40767,55119,44696,48067,44883,34447,37100,40775,40855,34269,34442,24213,19760,5617];
+
+new Chart(document.getElementById('weeklyCost'),{type:'line',data:{labels:wks,
+datasets:[
+{label:'CC',data:ccW,borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,0.1)',fill:true,pointRadius:0,borderWidth:1.5},
+{label:'Media',data:mdW,borderColor:'#D85A30',backgroundColor:'rgba(216,90,48,0.1)',fill:true,pointRadius:0,borderWidth:1.5}
+]},options:{...base,scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,callback:v=>'€'+Math.round(v/1000)+'K'}}}}});
+
+new Chart(document.getElementById('ccBreak'),{type:'bar',data:{
+labels:['UniSalute INB','CallMeBack OUT','HLF INB','C2N INB','Click2Call','Social OUT','CB Collettive','Rinnovi DEM OUT','Collettive SMS','Preventivi OUT','Radio INB','Other'],
+datasets:[
+{label:'Ricevuti',data:[78459,49524,33688,15290,7995,43757,6220,4398,2358,2793,519,4472],backgroundColor:'#534AB7'},
+{label:'Utili',data:[64636,32277,25520,11527,6885,19153,4687,2122,1041,1195,314,2839],backgroundColor:'#1D9E75'}
+]},options:{...base,indexAxis:'y',scales:{...base.scales,x:{...base.scales.x,ticks:{...base.scales.x.ticks,callback:v=>v>=1000?Math.round(v/1000)+'K':v}}}}});
+</script>
+</body>
+</html>
